@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import API_BASE_URL from "../config/api.js";
 
 const AdminRegister = ({ onRegisterSuccess, onShowMessage }) => {
   const [formData, setFormData] = useState({
@@ -6,7 +7,6 @@ const AdminRegister = ({ onRegisterSuccess, onShowMessage }) => {
     email: "",
     password: ""
   });
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -29,7 +29,7 @@ const AdminRegister = ({ onRegisterSuccess, onShowMessage }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://jimmi-backend.onrender.com/api/register", {
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
@@ -81,24 +81,14 @@ const AdminRegister = ({ onRegisterSuccess, onShowMessage }) => {
 
       <div className="form-group">
         <label htmlFor="password">Password</label>
-        <div className="password-input-wrapper">
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password (min 6 characters)"
-          />
-          <button
-            type="button"
-            className="password-toggle-btn"
-            onClick={() => setShowPassword(!showPassword)}
-            tabIndex="-1"
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </button>
-        </div>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Enter your password (min 6 characters)"
+        />
       </div>
 
       <button type="submit" disabled={loading} className="submit-btn">

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import API_BASE_URL from "../config/api.js";
 
 const AdminLogin = ({ onLoginSuccess, onShowMessage }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -23,7 +23,7 @@ const AdminLogin = ({ onLoginSuccess, onShowMessage }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://jimmi-backend.onrender.com/api/login", {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -64,24 +64,14 @@ const AdminLogin = ({ onLoginSuccess, onShowMessage }) => {
 
       <div className="form-group">
         <label htmlFor="password">Password</label>
-        <div className="password-input-wrapper">
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-          />
-          <button
-            type="button"
-            className="password-toggle-btn"
-            onClick={() => setShowPassword(!showPassword)}
-            tabIndex="-1"
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </button>
-        </div>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Enter your password"
+        />
       </div>
 
       <button type="submit" disabled={loading} className="submit-btn">

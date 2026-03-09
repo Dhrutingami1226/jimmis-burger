@@ -48,7 +48,7 @@ const AdminPanel = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("https://jimmi-backend.onrender.com/api/logout", {}, {
+      await axios.post("http://localhost:5000/api/logout", {}, {
         withCredentials: true
       });
       setAdminUser(null);

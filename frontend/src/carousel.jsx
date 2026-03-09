@@ -26,8 +26,8 @@ const Carousel = () => {
     try {
       setLoading(true);
       const [carouselRes, offersRes] = await Promise.all([
-        fetch("https://jimmi-backend.onrender.com/api/carousel"),
-        fetch("https://jimmi-backend.onrender.com/api/offers")
+        fetch("http://localhost:5000/api/carousel"),
+        fetch("http://localhost:5000/api/offers")
       ]);
 
       const carouselData = await carouselRes.json();

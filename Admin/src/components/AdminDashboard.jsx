@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
+import API_BASE_URL from "../config/api.js";
 import StoreForm from "./StoreForm";
 import StoreList from "./StoreList";
 import StoreSearch from "./StoreSearch";
-import CarouselManager from "./CarouselManager";
-import OffersManager from "./OffersManager";
-import MenuManager from "./MenuManager";
-import AdminsList from "./AdminsList";
-import FranchiseInquiries from "./FranchiseInquiries";
 
 const AdminDashboard = ({ admin, onLogout }) => {
   const [stores, setStores] = useState([]);
   const [filteredStores, setFilteredStores] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("stores");
-  const [storeView, setStoreView] = useState("list");
+  const [activeTab, setActiveTab] = useState("view");
   const [selectedStore, setSelectedStore] = useState(null);
   const [editingStore, setEditingStore] = useState(null);
 
@@ -24,7 +19,7 @@ const AdminDashboard = ({ admin, onLogout }) => {
   const fetchAllStores = async () => {
     try {
       setLoading(true);
-      const response = await fetch("https://jimmi-backend.onrender.com/api/stores");
+      const response = await fetch(`${API_BASE_URL}/api/stores`);
       const data = await response.json();
       if (data.success) {
         setStores(data.data);
@@ -39,7 +34,7 @@ const AdminDashboard = ({ admin, onLogout }) => {
 
   const handleAddStore = async (storeData) => {
     try {
-      const response = await fetch("https://jimmi-backend.onrender.com/api/stores", {
+      const response = await fetch(`${API_BASE_URL}/api/stores`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(storeData)
@@ -49,8 +44,7 @@ const AdminDashboard = ({ admin, onLogout }) => {
       if (data.success) {
         setStores([...stores, data.data]);
         setFilteredStores([...stores, data.data]);
-        setStoreView("list");
-        setEditingStore(null);
+        setActiveTab("view");
         return { success: true, message: "Store added successfully!" };
       } else {
         return { success: false, message: data.message };
@@ -63,7 +57,7 @@ const AdminDashboard = ({ admin, onLogout }) => {
   const handleUpdateStore = async (storeData) => {
     try {
       const response = await fetch(
-        `https://jimmi-backend.onrender.com/api/stores/${editingStore.id}`,
+        `${API_BASE_URL}/api/stores/${editingStore.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -79,7 +73,7 @@ const AdminDashboard = ({ admin, onLogout }) => {
         setStores(updatedStores);
         setFilteredStores(updatedStores);
         setEditingStore(null);
-        setStoreView("list");
+        setActiveTab("view");
         return { success: true, message: "Store updated successfully!" };
       } else {
         return { success: false, message: data.message };
@@ -93,7 +87,7 @@ const AdminDashboard = ({ admin, onLogout }) => {
     if (!window.confirm("Are you sure you want to delete this store?")) return;
 
     try {
-      const response = await fetch(`https://jimmi-backend.onrender.com/api/stores/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/stores/${id}`, {
         method: "DELETE"
       });
 
@@ -119,7 +113,7 @@ const AdminDashboard = ({ admin, onLogout }) => {
 
     try {
       const response = await fetch(
-        `https://jimmi-backend.onrender.com/api/stores/search?name=${encodeURIComponent(searchTerm)}`
+        `${API_BASE_URL}/api/stores/search?name=${encodeURIComponent(searchTerm)}`
       );
       const data = await response.json();
       if (data.success) {
@@ -132,12 +126,7 @@ const AdminDashboard = ({ admin, onLogout }) => {
 
   const handleEditStore = (store) => {
     setEditingStore(store);
-    setStoreView("form");
-  };
-
-  const handleAddNewStore = () => {
-    setEditingStore(null);
-    setStoreView("form");
+    setActiveTab("add");
   };
 
   return (
@@ -154,98 +143,45 @@ const AdminDashboard = ({ admin, onLogout }) => {
 
       <div className="dashboard-tabs">
         <button
-          className={`tab-btn ${activeTab === "stores" ? "active" : ""}`}
+          className={`tab-btn ${activeTab === "view" ? "active" : ""}`}
           onClick={() => {
-            setActiveTab("stores");
+            setActiveTab("view");
             setEditingStore(null);
-            setStoreView("list");
           }}
         >
-          🏪 Stores
+          📋 View Stores
         </button>
         <button
-          className={`tab-btn ${activeTab === "carousel" ? "active" : ""}`}
-          onClick={() => setActiveTab("carousel")}
+          className={`tab-btn ${activeTab === "add" ? "active" : ""}`}
+          onClick={() => setActiveTab("add")}
         >
-          📷 Carousel
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "offers" ? "active" : ""}`}
-          onClick={() => setActiveTab("offers")}
-        >
-          🎁 Offers
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "menu" ? "active" : ""}`}
-          onClick={() => setActiveTab("menu")}
-        >
-          🍔 Menu
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "admins" ? "active" : ""}`}
-          onClick={() => setActiveTab("admins")}
-        >
-          👥 Admins
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "franchise" ? "active" : ""}`}
-          onClick={() => setActiveTab("franchise")}
-        >
-          🏢 Franchise
+          {editingStore ? "✏️ Edit Store" : "➕ Add Store"}
         </button>
       </div>
 
       <div className="dashboard-content">
-        {activeTab === "stores" && (
-          <div className="tab-content">
-            {storeView === "list" && (
-              <>
-                <StoreSearch onSearch={handleSearchStores} />
-                <button 
-                  className="add-btn" 
-                  onClick={handleAddNewStore}
-                  style={{margin: "15px 0", padding: "10px 20px", backgroundColor: "#eda62e", color: "white", border: "none", borderRadius: "5px", cursor: "pointer", fontSize: "1rem", fontWeight: "600"}}
-                >
-                  ➕ Add New Store
-                </button>
-                {loading ? (
-                  <p>Loading stores...</p>
-                ) : (
-                  <StoreList
-                    stores={filteredStores}
-                    onEdit={handleEditStore}
-                    onDelete={handleDeleteStore}
-                  />
-                )}
-              </>
-            )}
-            {storeView === "form" && (
-              <div className="modal-form">
-                <button 
-                  className="back-btn"
-                  onClick={() => {
-                    setStoreView("list");
-                    setEditingStore(null);
-                  }}
-                  style={{marginBottom: "15px", padding: "8px 16px", backgroundColor: "#666", color: "white", border: "none", borderRadius: "5px", cursor: "pointer"}}
-                >
-                  ← Back to List
-                </button>
-                <StoreForm
-                  onSubmit={editingStore ? handleUpdateStore : handleAddStore}
-                  initialData={editingStore}
-                  isEditing={!!editingStore}
-                />
-              </div>
+        {activeTab === "view" && (
+          <div className="view-section">
+            <StoreSearch onSearch={handleSearchStores} />
+            {loading ? (
+              <p>Loading stores...</p>
+            ) : (
+              <StoreList
+                stores={filteredStores}
+                onEdit={handleEditStore}
+                onDelete={handleDeleteStore}
+              />
             )}
           </div>
         )}
 
-        {activeTab === "carousel" && <CarouselManager />}
-        {activeTab === "offers" && <OffersManager />}
-        {activeTab === "menu" && <MenuManager />}
-        {activeTab === "admins" && <AdminsList />}
-        {activeTab === "franchise" && <FranchiseInquiries />}
+        {activeTab === "add" && (
+          <StoreForm
+            onSubmit={editingStore ? handleUpdateStore : handleAddStore}
+            initialData={editingStore}
+            isEditing={!!editingStore}
+          />
+        )}
       </div>
     </div>
   );

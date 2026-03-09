@@ -11,7 +11,7 @@ const Menu = () => {
     const fetchMenus = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://jimmi-backend.onrender.com/api/menu");
+        const response = await fetch("http://localhost:5000/api/menu");
         const data = await response.json();
         
         if (data.success && data.data && data.data.length > 0) {

@@ -11,7 +11,7 @@ const Franchise = () => {
     state: "",
     pincode: "",
     hrspmonth: "",
-    scoutshop: ""
+    scoutshop: "No"
   });
 
   const [errors, setErrors] = useState({});
@@ -119,18 +119,12 @@ const Franchise = () => {
   // Validate all fields
   const validateForm = () => {
     const newErrors = {};
-    const requiredFields = ["userId", "name", "email", "phoneno", "country", "state", "pincode", "hrspmonth", "scoutshop"];
+    const requiredFields = ["userId", "name", "email", "phoneno", "country", "state", "pincode", "hrspmonth"];
 
     requiredFields.forEach((field) => {
-      if (field === "scoutshop") {
-        if (!formData[field]) {
-          newErrors[field] = "Please select an option";
-        }
-      } else {
-        const error = validateField(field, formData[field]);
-        if (error) {
-          newErrors[field] = error;
-        }
+      const error = validateField(field, formData[field]);
+      if (error) {
+        newErrors[field] = error;
       }
     });
 
@@ -172,7 +166,7 @@ const Franchise = () => {
           state: "",
           pincode: "",
           hrspmonth: "",
-          scoutshop: ""
+          scoutshop: "No"
         });
         setErrors({});
 
@@ -343,13 +337,11 @@ const Franchise = () => {
             name="scoutshop"
             value={formData.scoutshop}
             onChange={handleChange}
-            className={errors.scoutshop ? "select-input input-error" : "select-input"}
+            className="select-input"
           >
-            <option value="" disabled selected>Select option</option>
             <option value="No">No</option>
             <option value="Yes">Yes</option>
           </select>
-          {errors.scoutshop && <span className="error-text">{errors.scoutshop}</span>}
         </div>
 
         {/* Submit Button */}

@@ -152,7 +152,7 @@
 /* ===== MEDIUM DEVICES (max-width: 768px) ===== */
 @media screen and (max-width: 768px) {
   .Menu {
-    margin-top: 220px;
+    margin-top: 140px;
     padding: 0 10px;
   }
 
@@ -213,7 +213,7 @@
 /* ===== MOBILE RESPONSIVE (max-width: 480px) ===== */
 @media screen and (max-width: 480px) {
   .Menu {
-    margin-top: 220px;
+    margin-top: 140px;
     padding: 0 15px;
   }
 
@@ -286,7 +286,7 @@
 /* ===== SMALL MOBILE (max-width: 360px) ===== */
 @media screen and (max-width: 360px) {
   .Menu {
-    margin-top: 200px;
+    margin-top: 120px;
     padding: 0 10px;
   }
 
@@ -310,8 +310,8 @@
   }
 
   .slide {
-    max-width: 300px;
-    height: 240px;
+    max-width: 330px;
+    height: 270px;
   }
 
   .slide-left,

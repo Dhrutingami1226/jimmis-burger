@@ -6,13 +6,12 @@ import cors from 'cors';
 
 import registerRoutes from "./routes/register.mjs";
 import loginRoutes from "./routes/login.mjs";
-import logoutRoutes from "./routes/logout.mjs";
 import forgotRoutes from "./routes/Forgotpass.mjs";
 import franchiseRoutes from "./routes/franchise.mjs"
-import storeLocatorRoutes from "./routes/storelocator.mjs"
-import carouselRoutes from "./routes/carousel.mjs"
-import offersRoutes from "./routes/offers.mjs"
-import menuRoutes from "./routes/menu.mjs"
+import carouselRoutes from "./routes/carousel.mjs";
+import menuRoutes from "./routes/menu.mjs";
+import offersRoutes from "./routes/offers.mjs";
+import storeLocatorRoutes from "./routes/storelocator.mjs";
 
 dotenv.config();
 await connectDb();
@@ -21,35 +20,38 @@ const app = express();
 
 // Middleware
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://jimmi-frontend.onrender.com",
-  "https://jimmi-admin.onrender.com"
+  'http://localhost:5173', 
+  'http://localhost:5174', 
+  'http://localhost:5175', 
+  'http://localhost:3000', 
+  'http://localhost:5000',
+  'https://jimmi-backend.onrender.com'
 ];
 
+// Add production frontend URL if it exists
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: allowedOrigins,
   credentials: true
 }));
-
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/register",registerRoutes);
 app.use("/api/login",loginRoutes);
-app.use("/api/logout",logoutRoutes);
 app.use("/api/forgot-pass", forgotRoutes);
 app.use("/api/franchise", franchiseRoutes);
-app.use("/api/stores", storeLocatorRoutes);
 app.use("/api/carousel", carouselRoutes);
-app.use("/api/offers", offersRoutes);
 app.use("/api/menu", menuRoutes);
+app.use("/api/offers", offersRoutes);
+app.use("/api/stores", storeLocatorRoutes);
+app.use("/api/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ success: true, message: "Logged out successfully" });
+});
 
 const PORT = process.env.PORT || 5000;
 

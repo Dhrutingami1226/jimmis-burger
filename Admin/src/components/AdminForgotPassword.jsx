@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import API_BASE_URL from "../config/api.js";
 
 const AdminForgotPassword = ({ onForgotSuccess, onShowMessage }) => {
   const [step, setStep] = useState("email"); // "email" or "verify"
@@ -18,7 +19,7 @@ const AdminForgotPassword = ({ onForgotSuccess, onShowMessage }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://jimmi-backend.onrender.com/api/forgot-pass/send-code", {
+      const response = await fetch(`${API_BASE_URL}/api/forgot-pass/send-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })
@@ -54,7 +55,7 @@ const AdminForgotPassword = ({ onForgotSuccess, onShowMessage }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://jimmi-backend.onrender.com/api/forgot-pass/resetpassword", {
+      const response = await fetch(`${API_BASE_URL}/api/forgot-pass/resetpassword`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, newpassword: newPassword })

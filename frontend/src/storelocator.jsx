@@ -10,7 +10,7 @@ const StoreLocator = () => {
     const fetchStores = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://jimmi-backend.onrender.com/api/stores");
+        const response = await fetch("http://localhost:5000/api/stores");
         
         if (!response.ok) {
           throw new Error("Failed to fetch stores");

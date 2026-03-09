@@ -69,7 +69,7 @@ const FranchiseForm = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://jimmi-backend.onrender.com/api/franchise", {
+      const response = await fetch("http://localhost:5000/api/franchise", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
@@ -226,7 +226,7 @@ const FranchiseForm = () => {
                 onChange={handleChange}
                 className={errors.scoutshop ? "input-error" : ""}
               >
-                <option value="" disabled selected>Select option</option>
+                <option value="">Select option</option>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
               </select>
